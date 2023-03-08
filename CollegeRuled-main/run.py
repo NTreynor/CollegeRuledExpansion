@@ -32,6 +32,8 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
         desired_world_state = copy.deepcopy(current_worldstate) # TODO: Replace this with an actual goal worldstate
 
     depthToSearch = min(depth_limit, lookaheadDepth)
+    print("depthOfSearch: ")
+    print(depthToSearch)
     indexValuePair = getBestIndexLookingAhead(depthToSearch, runable_events, desired_world_state, possible_events) #First parameter indicates search depth. Do not exceed 6.
     idx_of_event_to_run = indexValuePair[0]
 
@@ -40,23 +42,41 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
     chars_to_use = runable_events[idx_of_event_to_run][2]
     environments_to_use = runable_events[idx_of_event_to_run][3]
     next_worldstate = event.doEvent(worldstate_to_run, chars_to_use, environments_to_use)
+
+    # Here we are outputting our current drama-score, our desired drama score at the next waypoint or at this point
+    # along the drama curve, and the difference
     print("Dramatic score: ")
     print(next_worldstate.drama_score)
     if next_worldstate.getDramaCurve() != None:
         print("Target dramatic score: ")
         dramaTarget = next_worldstate.getDramaCurve().getDramaTargets()[len(next_worldstate.event_history)]
         print(dramaTarget)
+        print("Delta Drama: ")
+        print(next_worldstate.drama_score - dramaTarget)
+    else:
+        print("Target dramatic score: ")
+        dramaTarget = desired_world_state.drama_score
+        print(dramaTarget)
+        print("Delta Drama: ")
+        print(next_worldstate.drama_score - dramaTarget)
+
 
 
     if desired_world_state.radius == None:
         desired_world_state.radius = 0
     if (distanceBetweenWorldstates(next_worldstate, desired_world_state) < desired_world_state.radius):
         print(". . .")
+        print("(Waypoint hit)")
+        print(". . .")
         waypoints.pop(0)
 
     if depth_limit == 1:
+        print(". . .")
+        print("(Story terminating, hit depth limit)")
+        print(". . .")
+        print("Distance to final waypoint: ")
         print(distanceBetweenWorldstates(next_worldstate, desired_world_state))
-    return runStory(next_worldstate, possible_events, depth_limit - 1, waypoints)
+    return runStory(next_worldstate, possible_events, depth_limit - 1, waypoints, lookaheadDepth)
 
 def waypointTestEnvironment():
     # Environment Initialization
@@ -188,7 +208,7 @@ if __name__ == "__main__":
 
     # First demo story
     initWorldState, waypoints = waypointTestEnvironment()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=1)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
 
     print("")
     print("Second Story:")
@@ -197,7 +217,7 @@ if __name__ == "__main__":
     # Second demo story
     # Using drama curve system
     initWorldState, waypoints = waypointTestEnvironmentAlt()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=1)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
 
 
 

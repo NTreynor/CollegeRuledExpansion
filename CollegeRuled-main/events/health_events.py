@@ -47,13 +47,13 @@ class HitBySpaceCar(PlotFragment):
                     " horizon. Then they closed their eyes for the last time.".format(char_two.name)) 
             char_one.murderer = True
 
-        print("Drama score before change")
-        print(reachable_worldstate.drama_score)
-        print("Drama score incremented by:")
-        print(self.drama)
+        #print("Drama score before change")
+        #print(reachable_worldstate.drama_score)
+        #print("Drama score incremented by:")
+        #print(self.drama)
         reachable_worldstate.drama_score += self.drama
-        print("New drama:")
-        print(reachable_worldstate.drama_score)
+        #print("New drama:")
+        #print(reachable_worldstate.drama_score)
 
         return self.updateEventHistory(reachable_worldstate, characters, environment)
 
