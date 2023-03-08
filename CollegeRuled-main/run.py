@@ -4,6 +4,8 @@ from events.law_events import *
 from events.love_events import *
 from events.health_events import *
 from path_finding import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 def getRunableEvents(current_worldstate, possible_events):
     runableEvents = []
@@ -15,7 +17,13 @@ def getRunableEvents(current_worldstate, possible_events):
     return runableEvents
 
 
-def runStory(current_worldstate, possible_events, depth_limit, waypoints = None, lookaheadDepth=2, drama_weight=3):
+def runStory(current_worldstate, possible_events, depth_limit, waypoints = None, lookaheadDepth=2, drama_weight=3, dramaVals = None):
+    if dramaVals is None:
+        currDramaVals = []
+        targetDramaVals = []
+        deltaDramaVals = []
+        dramaVals = [currDramaVals, targetDramaVals, deltaDramaVals]
+
     if (depth_limit == 0):
         return current_worldstate
     
@@ -47,18 +55,23 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
     # along the drama curve, and the difference
     print("Dramatic score: ")
     print(next_worldstate.drama_score)
+    dramaVals[0].append(next_worldstate.drama_score)
     if next_worldstate.getDramaCurve() != None:
         print("Target dramatic score: ")
         dramaTarget = next_worldstate.getDramaCurve().getDramaTargets()[len(next_worldstate.event_history)]
         print(dramaTarget)
+        dramaVals[1].append(dramaTarget)
         print("Delta Drama: ")
         print(next_worldstate.drama_score - dramaTarget)
+        dramaVals[2].append(next_worldstate.drama_score - dramaTarget)
     else:
         print("Target dramatic score: ")
         dramaTarget = desired_world_state.drama_score
         print(dramaTarget)
         print("Delta Drama: ")
+        dramaVals[1].append(dramaTarget)
         print(next_worldstate.drama_score - dramaTarget)
+        dramaVals[2].append(next_worldstate.drama_score - dramaTarget)
 
 
 
@@ -76,7 +89,17 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
         print(". . .")
         print("Distance to final waypoint: ")
         print(distanceBetweenWorldstates(next_worldstate, desired_world_state))
-    return runStory(next_worldstate, possible_events, depth_limit - 1, waypoints, lookaheadDepth)
+
+        print(dramaVals)
+        lenOfGraph = len(dramaVals[1])
+        xVals = np.arange(start=0, stop=lenOfGraph)
+        plt.title("Drama Vals")
+        plt.plot(xVals, dramaVals[0], color="red")
+        plt.plot(xVals, dramaVals[1], color="blue")
+        plt.plot(xVals, dramaVals[2], color="green")
+        plt.show()
+
+    return runStory(next_worldstate, possible_events, depth_limit - 1, waypoints, lookaheadDepth, dramaVals=dramaVals)
 
 def waypointTestEnvironment():
     # Environment Initialization
@@ -147,8 +170,8 @@ def waypointTestEnvironment():
 def waypointTestEnvironmentAlt():
 
     # Drama curve Initialization
-    params = [[1.8, 9], [1, 15]]
-    testCurve = DramaCurve(2, params, 20, 200)
+    params = [[2.3, 6], [2, 13]]
+    testCurve = DramaCurve(2, params, 16, 100)
 
 
     # Environment Initialization
@@ -208,7 +231,7 @@ if __name__ == "__main__":
 
     # First demo story
     initWorldState, waypoints = waypointTestEnvironment()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
 
     print("")
     print("Second Story:")
@@ -217,7 +240,7 @@ if __name__ == "__main__":
     # Second demo story
     # Using drama curve system
     initWorldState, waypoints = waypointTestEnvironmentAlt()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
 
 
 

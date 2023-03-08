@@ -58,7 +58,7 @@ def getBestIndexLookingAhead(depth, eventList, desiredWorldState, possible_event
 
 def distanceBetweenWorldstates(currWorldState, newWorldState):
     distance = 0
-    drama_weight = 999
+    drama_weight = 2
     if currWorldState.characters:
         for character in currWorldState.characters:
             for future_character in newWorldState.characters:
