@@ -111,8 +111,10 @@ class GoToSpaceJail(PlotFragment):
 
 
 class SoloJailbreak(PlotFragment):
-    def init(self):
+    def __init__(self):
         self.drama = 15
+        #print("solo jailbreak drama:")
+        #print(self.drama)
 
     def checkPreconditions(self, worldstate):
         valid_characters = []
@@ -137,12 +139,14 @@ class SoloJailbreak(PlotFragment):
                 "{} returns to their home planet, Higgins.".format(characters[0].name))
         char.in_jail = False
         char.fugitive = True
+        print("solo jailbreak drama when doing:")
+        print(self.drama)
         reachable_worldstate.drama_score += self.drama
         return self.updateEventHistory(reachable_worldstate, characters, environment)
 
 
 class AssistedJailBreak(PlotFragment):
-    def init(self):
+    def __init__(self):
         self.drama = 15
 
     def checkPreconditions(self, worldstate):
@@ -181,7 +185,7 @@ class AssistedJailBreak(PlotFragment):
 
 
 class SabotagedJailBreak(PlotFragment):
-    def init(self):
+    def __init__(self):
         self.drama = 9
 
     def checkPreconditions(self, worldstate):
