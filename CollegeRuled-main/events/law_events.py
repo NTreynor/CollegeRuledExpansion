@@ -139,8 +139,6 @@ class SoloJailbreak(PlotFragment):
                 "{} returns to their home planet, Higgins.".format(characters[0].name))
         char.in_jail = False
         char.fugitive = True
-        print("solo jailbreak drama when doing:")
-        print(self.drama)
         reachable_worldstate.drama_score += self.drama
         return self.updateEventHistory(reachable_worldstate, characters, environment)
 
