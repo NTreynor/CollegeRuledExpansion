@@ -58,6 +58,7 @@ def getBestIndexLookingAhead(depth, eventList, desiredWorldState, possible_event
 
 def distanceBetweenWorldstates(currWorldState, newWorldState):
     distance = 0
+    drama_weight = 0
     if currWorldState.characters:
         for character in currWorldState.characters:
             for future_character in newWorldState.characters:
@@ -66,7 +67,7 @@ def distanceBetweenWorldstates(currWorldState, newWorldState):
                     distance += distanceBetweenVersions
 
     if len(currWorldState.characters) != len(newWorldState.characters):
-        deadCharacterPenalty = abs(len(currWorldState.characters)-len(newWorldState.characters)) * 0 # Change this value to change weight of undesired deaths.
+        deadCharacterPenalty = abs(len(currWorldState.characters)-len(newWorldState.characters)) * 50 # Change this value to change weight of undesired deaths.
         distance += deadCharacterPenalty
 
     # Drama scores using drama curve methodology
@@ -75,12 +76,15 @@ def distanceBetweenWorldstates(currWorldState, newWorldState):
         plotSteps = len(currWorldState.event_history)
         #print(plotSteps)
         dramaTarget = newWorldState.getDramaCurve().getDramaTargets()[plotSteps]
-        drama_distance = abs(currWorldState.drama_score - dramaTarget) * 5 / 2
+        drama_distance = abs(currWorldState.drama_score - dramaTarget) * drama_weight
         distance += drama_distance
+        #print(drama_distance)
         return distance
 
     # Drama scoring using arbitrary assigned target for a waypoint
     if newWorldState.drama_score != None:
-        drama_distance = abs(currWorldState.drama_score - newWorldState.drama_score) * 5/2
+        #drama_distance = abs(currWorldState.drama_score - newWorldState.drama_score) * 5/2
+        drama_distance = abs(currWorldState.drama_score - newWorldState.drama_score) * drama_weight
         distance += drama_distance
+        #print(drama_distance)
     return distance

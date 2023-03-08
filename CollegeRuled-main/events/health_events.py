@@ -37,15 +37,24 @@ class HitBySpaceCar(PlotFragment):
         char_two.updateRelationship(char_one, -10)
         char_two.updateHealth(-6)
         if print_event:
+            self.drama = 14
             print("{} hits {} with their spacecar.".format(char_one.name, char_two.name))
         if char_two.isDead():  # kill character
-            self.drama += 5  # more dramatic if character dies
+            self.drama = 19  # more dramatic if character dies
             reachable_worldstate.removeCharacter(char_two)
             if print_event:
                 print("As {} lay there on the spaceway, they stared up at two moons rising over the dusky" \
                     " horizon. Then they closed their eyes for the last time.".format(char_two.name)) 
             char_one.murderer = True
+
+        print("Drama score before change")
+        print(reachable_worldstate.drama_score)
+        print("Drama score incremented by:")
+        print(self.drama)
         reachable_worldstate.drama_score += self.drama
+        print("New drama:")
+        print(reachable_worldstate.drama_score)
+
         return self.updateEventHistory(reachable_worldstate, characters, environment)
 
 

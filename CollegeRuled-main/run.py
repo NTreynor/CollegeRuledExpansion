@@ -15,7 +15,7 @@ def getRunableEvents(current_worldstate, possible_events):
     return runableEvents
 
 
-def runStory(current_worldstate, possible_events, depth_limit, waypoints = None, lookaheadDepth=2):
+def runStory(current_worldstate, possible_events, depth_limit, waypoints = None, lookaheadDepth=2, drama_weight=3):
     if (depth_limit == 0):
         return current_worldstate
     
@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
     # First demo story
     initWorldState, waypoints = waypointTestEnvironment()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=1)
 
     print("")
     print("Second Story:")
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # Second demo story
     # Using drama curve system
     initWorldState, waypoints = waypointTestEnvironmentAlt()
-    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+    runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=1)
 
 
 
