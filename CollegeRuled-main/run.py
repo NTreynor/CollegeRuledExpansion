@@ -227,7 +227,7 @@ if __name__ == "__main__":
     possibleEvents = [FallInLove(), AskOnDate(),  HitBySpaceCar(), GetMiningJob(),
                         GetSpaceShuttleJob(), GoToSpaceJail(), SoloJailbreak(), CoffeeSpill(),
                         HospitalVisit(), Cheat(), Steal(), Irritate(), Befriend(), LoseJob(),
-                        AssistedJailBreak(), SabotagedJailBreak(), DoNothing()]
+                        AssistedJailBreak(), SabotagedJailBreak(), DoNothing(), MoneyProblems(), GetRejectedFromJob()]
 
     # First demo story
     initWorldState, waypoints = waypointTestEnvironment()

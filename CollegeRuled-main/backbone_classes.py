@@ -178,7 +178,7 @@ class WorldState:
 
 class PlotFragment:
     def __init__(self):
-        self.drama = 0  # out of 20
+        self.drama = 0  # -20 to 20
         return
 
     def checkPreconditions(self, worldstate):
