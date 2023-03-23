@@ -93,11 +93,14 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
         print(dramaVals)
         lenOfGraph = len(dramaVals[1])
         xVals = np.arange(start=0, stop=lenOfGraph)
+        """
         plt.title("Drama Vals")
         plt.plot(xVals, dramaVals[0], color="red")
         plt.plot(xVals, dramaVals[1], color="blue")
         plt.plot(xVals, dramaVals[2], color="green")
         plt.show()
+        """
+        return dramaVals
 
     return runStory(next_worldstate, possible_events, depth_limit - 1, waypoints, lookaheadDepth, dramaVals=dramaVals)
 
@@ -170,7 +173,7 @@ def waypointTestEnvironment():
 def waypointTestEnvironmentAlt():
 
     # Drama curve Initialization
-    params = [[2.3, 6], [2, 13]]
+    params = [[2.6, 6], [2, 13]]
     testCurve = DramaCurve(2, params, 16, 100)
 
 
@@ -229,9 +232,11 @@ if __name__ == "__main__":
                         HospitalVisit(), Cheat(), Steal(), Irritate(), Befriend(), LoseJob(),
                         AssistedJailBreak(), SabotagedJailBreak(), DoNothing(), MoneyProblems(), GetRejectedFromJob()]
 
-    # First demo story
+    """
+    "# First demo story
     initWorldState, waypoints = waypointTestEnvironment()
     runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
+    """
 
     print("")
     print("Second Story:")
@@ -239,8 +244,62 @@ if __name__ == "__main__":
 
     # Second demo story
     # Using drama curve system
+    """
     initWorldState, waypoints = waypointTestEnvironmentAlt()
     runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
+    """
+
+    numStories = 10
+    dramaValList = []
+    for z in range(numStories):
+        initWorldState, waypoints = waypointTestEnvironmentAlt()
+        dramaValuesInstance = runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+        dramaValList.append(dramaValuesInstance)
+
+    dramaVals = dramaValList[0]
+    lenOfGraph = len(dramaVals[1])
+
+    currDramaMean = [0] * lenOfGraph
+    currDramaMin = [9999] * lenOfGraph
+    currDramaMax = [0] * lenOfGraph
+    for x in range(numStories):
+        for y in range(lenOfGraph):
+            currDramaMean[y] += dramaValList[x][0][y]
+            if currDramaMax[y] < dramaValList[x][0][y]:
+                currDramaMax[y] = dramaValList[x][0][y]
+            if currDramaMin[y] > dramaValList[x][0][y]:
+                currDramaMin[y] = dramaValList[x][0][y]
+
+    for index in range(lenOfGraph):
+        currDramaMean[index] = currDramaMean[index] / numStories # adjust mean appropriately
+
+    # Now generating data for box and whisker plot
+    currDramaData = [[0 for i in range(numStories)] for j in range(lenOfGraph)]
+    for x in range(numStories):
+        for y in range(lenOfGraph):
+            currDramaData[y][x] = dramaValList[x][0][y]
+
+    fig = plt.figure(figsize=(10, 7))
+
+    # Creating axes instance
+    ax = fig.add_axes([0, 0, 1, 1])
+
+    # Creating plot
+    bp = ax.boxplot(currDramaData)
+
+    # show plot
+    plt.show()
+
+
+    xVals = np.arange(start=0, stop=lenOfGraph)
+    plt.title("Drama Vals")
+    plt.plot(xVals, currDramaMean, color="red") #current
+    plt.plot(xVals, currDramaMax, color="blue") #upper bound
+    plt.plot(xVals, currDramaMin, color="blue") #Lower bound
+    plt.plot(xVals, dramaVals[1], color="green") #Target
+    plt.show()
+
+
 
 
 
