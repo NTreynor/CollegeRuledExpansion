@@ -6,6 +6,9 @@ from events.health_events import *
 from path_finding import *
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
 
 def getRunableEvents(current_worldstate, possible_events):
     runableEvents = []
@@ -279,13 +282,30 @@ if __name__ == "__main__":
         for y in range(lenOfGraph):
             currDramaData[y][x] = dramaValList[x][0][y]
 
-    fig = plt.figure(figsize=(10, 7))
+    fig = plt.figure(figsize=(12, 10))
 
     # Creating axes instance
-    ax = fig.add_axes([0, 0, 1, 1])
+    ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 
     # Creating plot
-    bp = ax.boxplot(currDramaData)
+    bp = ax.boxplot(currDramaData, notch=False, vert=True, patch_artist=True)
+
+    ax.yaxis.grid(True)
+
+    colors = ['red']
+    for patch, color in zip(bp['boxes'], colors):
+        patch.set_facecolor(color)
+
+    xVals = np.arange(start=1, stop=lenOfGraph+1)
+    plt.plot(xVals, dramaVals[1], color="red", label='Target Drama Curve') #Target
+
+    ax.set_xlabel('Plot Fragment Index')
+    ax.set_ylabel('Drama Level')
+
+    legend_elements = [Line2D([0], [0], color='red', lw=4, label='Target Drama Values'),
+                       Patch(facecolor=sns.desaturate('blue', .5), edgecolor='grey', linewidth=1.5,
+                             label='Produced Drama Values')]
+    ax.legend(handles=legend_elements, fontsize='xx-large')
 
     # show plot
     plt.show()
