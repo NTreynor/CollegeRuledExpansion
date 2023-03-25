@@ -43,8 +43,8 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
         desired_world_state = copy.deepcopy(current_worldstate) # TODO: Replace this with an actual goal worldstate
 
     depthToSearch = min(depth_limit, lookaheadDepth)
-    print("depthOfSearch: ")
-    print(depthToSearch)
+    #print("depthOfSearch: ")
+    #print(depthToSearch)
     indexValuePair = getBestIndexLookingAhead(depthToSearch, runable_events, desired_world_state, possible_events) #First parameter indicates search depth. Do not exceed 6.
     idx_of_event_to_run = indexValuePair[0]
 
@@ -56,24 +56,24 @@ def runStory(current_worldstate, possible_events, depth_limit, waypoints = None,
 
     # Here we are outputting our current drama-score, our desired drama score at the next waypoint or at this point
     # along the drama curve, and the difference
-    print("Dramatic score: ")
-    print(next_worldstate.drama_score)
+    #print("Dramatic score: ")
+    #print(next_worldstate.drama_score)
     dramaVals[0].append(next_worldstate.drama_score)
     if next_worldstate.getDramaCurve() != None:
-        print("Target dramatic score: ")
+        #print("Target dramatic score: ")
         dramaTarget = next_worldstate.getDramaCurve().getDramaTargets()[len(next_worldstate.event_history)]
-        print(dramaTarget)
+        #print(dramaTarget)
         dramaVals[1].append(dramaTarget)
-        print("Delta Drama: ")
-        print(next_worldstate.drama_score - dramaTarget)
+        #print("Delta Drama: ")
+        #print(next_worldstate.drama_score - dramaTarget)
         dramaVals[2].append(next_worldstate.drama_score - dramaTarget)
     else:
-        print("Target dramatic score: ")
+        #print("Target dramatic score: ")
         dramaTarget = desired_world_state.drama_score
-        print(dramaTarget)
-        print("Delta Drama: ")
+        #print(dramaTarget)
+        #print("Delta Drama: ")
         dramaVals[1].append(dramaTarget)
-        print(next_worldstate.drama_score - dramaTarget)
+        #print(next_worldstate.drama_score - dramaTarget)
         dramaVals[2].append(next_worldstate.drama_score - dramaTarget)
 
 
@@ -235,11 +235,11 @@ if __name__ == "__main__":
                         HospitalVisit(), Cheat(), Steal(), Irritate(), Befriend(), LoseJob(),
                         AssistedJailBreak(), SabotagedJailBreak(), DoNothing(), MoneyProblems(), GetRejectedFromJob()]
 
-    """
-    "# First demo story
+
+    # First demo story
     initWorldState, waypoints = waypointTestEnvironment()
     runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
-    """
+
 
     print("")
     print("Second Story:")
@@ -252,11 +252,11 @@ if __name__ == "__main__":
     runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
     """
 
-    numStories = 10
+    numStories = 1
     dramaValList = []
     for z in range(numStories):
         initWorldState, waypoints = waypointTestEnvironmentAlt()
-        dramaValuesInstance = runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=3)
+        dramaValuesInstance = runStory(initWorldState, possibleEvents, 15, waypoints, lookaheadDepth=2)
         dramaValList.append(dramaValuesInstance)
 
     dramaVals = dramaValList[0]
@@ -317,7 +317,7 @@ if __name__ == "__main__":
     plt.plot(xVals, currDramaMax, color="blue") #upper bound
     plt.plot(xVals, currDramaMin, color="blue") #Lower bound
     plt.plot(xVals, dramaVals[1], color="green") #Target
-    plt.show()
+    #plt.show()
 
 
 
